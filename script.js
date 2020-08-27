@@ -1,8 +1,155 @@
-﻿(function(){
+use strict';
+const pickImmobileList = document.querySelector('#pickImmobileList'),
+      pickHolidayList = document.querySelector('#pickHolidayList'),
+      inputStart = document.querySelector('#inputStart'),
+      inputFinish = document.querySelector('#inputFinish'),
+      inputSpan = document.querySelector('#inputSpan'),
+      clickImmobileListPicker = document.querySelector('#clickImmobileListPicker'),
+      clickHolidayListPicker = document.querySelector('#clickHolidayListPicker'),
+      inputYear = document.querySelector('#inputYear'),
+      inputMonth = document.querySelector('#inputMonth'),
+      inputDate = document.querySelector('#inputDate'),
+      inputHour = document.querySelector('#inputHour'),
+      inputMinute = document.querySelector('#inputMinute'),
+      runButton = document.querySelector('#runButton'),
+      copyButton = document.querySelector('#copyButton'),
+      resultTable = document.querySelector('#resultTable');
+/**
+ * ※IMMOBILE_LISTは試験ができない(= 設備が動いていない)期間のリストで、
+ *   規定のフォーマット(YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm_REASON)で入力する
+ * ※HOLIDAY_LISTは取り出しの対応ができない(= 設備が動いている)日付のリストで、
+ *   規定のフォーマット(YYYY/MM/DD)で入力する
+ */
+const CACHE_DATA = [ ],
+      IM_REGEXP = /.{4}\/.{2}\/.{2}\s.{2}:.{2}~.{4}\/.{2}\/.{2}\s.{2}:.{2}_.+/,
+      HO_REGEXP = /.{4}\/.{2}\/.{2}/;
+let base, cache, distance, finish, loop, span, start, temp, total, imList, hoList;
+// pickImmobileList.addEventListener('change', onChange, false);
+// pickHolidayList.addEventListener('change', onChange, false);
+clickImmobileListPicker.addEventListener('click', onClick, false);
+clickHolidayListPicker.addEventListener('click', onClick, false);
+runButton.addEventListener('click', onClick, false);
+copyButton.addEventListener('click', onClick, false);
+function onChange (event) {
+  switch (this) {
+  case pickImmobileList:
+    fetch(this.files[0]).then(response => response.text()).then(text => {
+      imList = text.replace(/\r/g, '').split('\n').filter(currentValue => IM_REGEXP.test(currentValue)).map(currentValue => currentValue.split(/[~_]/));
+      break;
+    case pickHolidayList:
+    fetch(this.files[0]).then(response => response.text()).then(text => {
+      hoList = text.replace(/\r/g, '').split('\n').filter(currentValue => HO_REGEXP.test(currentValue));
+      break;
+  }
+}
+function onClick (event) {
+  switch (this) {
+    case clickImmobileListPicker:
+      pickImmobileList.click();
+      break;
+    case clickHolidayListPicker:
+      pickHolidayList.click();
+      break;
+    case runButton:
+      initialize();
+      while (main());
+      break;
+    case copyButton:
+      copyElement(resultTable);
+      break;
+  }
+}
+function initialize(){
+  start = parseInt(inputStart.value);
+  finish = parseInt(inputFinish.value);
+  span = parseInt(inputSpan.value);
+  total = 0;
+  loop = Math.floor(start/span);
+  distance = 0;
+  temp = new Date(`${inputYear.value}/${inputMonth.value}/${inputDate.value} ${inputHour.value}:${inputMinute.value}`);
+  base = temp.getTime();
+  CACHE_DATA.length = 0;
+  resultTable.querySelector('tbody').innerHTML = '';
+}
+function main () {
+  save();
+  update(10);
+  while ((total = parse(temp.getTime() - base) - 7 * loop - distance + start) < span * (loop + 1) || checkHoliday(temp)) {
+    temp.setDate(temp.getDate() + 1);
+    if (checkImmobile()) return true;
+  }
+  save();
+  CACHE_DATA.push(total);
+  CACHE_DATA.push('');
+  output();
+  loop ++;
+  update(17);
+  return total < finish;
+}
+function update (hour) {
+  if (temp.getHours() > hour) temp.setDate(temp.getDate() + 1);
+  temp.setHours(hour);
+}
+function parse (millisecond) {
+  return (millisecond / 3600000) | 0;
+}
+function checkImmobile () {
+  let flag = false, stop, restart, reason;
+  imList.forEach(currentValue => {
+    [ stop, restart, reason ] = currentValue;
+    if (format()[0] === stop.split(' ')[0]) {
+      const stopDate = new Date(stop);
+      save(stopDate);
+      total = parse(stopDate.getTime() - base) - 7 * loop - distance + start;
+      temp = new Date(restart);
+      distance += parse(temp.getTime() - stopDate.getTime());
+      flag = true;
+      CACHE_DATA.push(total);
+      CACHE_DATA.push(reason);
+      output();
+      if (total >= (loop + 1) * span) loop ++;
+    }
+  });
+  return flag;
+}
+function format () {
+  return [
+    `${temp.getFullYear()}/${temp.getMonth() + 1}/${temp.getDate()}`,
+    `${temp.getHours()}:${temp.getMinutes()}`
+  ];
+}
+function save (date = temp) {
+  CACHE_DATA.push(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
+}
+function output () {
+  const tr = document.createElement('tr');
+  let td;
+  CACHE_DATA.forEach(currentValue => {
+    td = document.createElement('td');
+    td.textContent = currentValue;
+    tr.appendChild(td);
+  });
+  resultTable.querySelector('tbody').appendChild(tr);
+  CACHE_DATA.length = 0;
+}
+function checkHoliday () {
+  return hoList.includes(format()[0]) || temp.getDay() % 6 === 0;
+}
+function copyElement (targetElement) {
+  const range = document.createRange();
+  range.selectNode(targetElement);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  document.execCommand('copy');
+  selection.removeRange(range);
+}
+/*
+(function(){
 	"use strict";
 	/**
 	 * UIを構成する要素を取得する
-	 */
+	 *
 	const pickImmobileList=document.querySelector("#pickImmobileList");
 	const pickHolidayList=document.querySelector("#pickHolidayList");
 	const inputStart=document.querySelector("#inputStart");
@@ -24,12 +171,12 @@
 	 *   規定のフォーマット(YYYY/MM/DD hh:mm~YYYY/MM/DD hh:mm_REASON)で入力する
 	 * ※HOLIDAY_LISTは取り出しの対応ができない(環境槽が動いている)日付のリストで、
 	 *   規定のフォーマット(YYYY/MM/DD)で入力する
-	 */
+	 *
 	const CACHE_DATA=[],IMMOBILE_LIST=[],HOLIDAY_LIST=[];
 	let base,cache,distance,finish,loop,span,start,temp,total;
 	/**
 	 * 各イベント時の処理を設定する
-	 */
+	 *
 	pickImmobileList.addEventListener("change",onChange,false);
 	pickHolidayList.addEventListener("change",onChange,false);
 	clickImmobileListPicker.addEventListener("click",onClick,false);
@@ -41,7 +188,7 @@
 	 * @argument {Event} event
 	 * @argument {FileList} event.target.files
 	 * @this {HTMLElement} event.target
-	 */
+	 *
 	function onChange(event){
 		switch(this){
 			case pickImmobileList:
@@ -56,7 +203,7 @@
 	 * @function onClick
 	 * @argument {Event} event
 	 * @this {HTMLElement} event.target
-	 */
+	 *
 	function onClick(event){
 		switch(this){
 			case clickImmobileListPicker:
@@ -91,7 +238,7 @@
 	}
 	/**
 	 * @function initialize
-	 */
+	 *
 	function initialize(){
 		start=parseInt(inputStart.value);
 		finish=parseInt(inputFinish.value);
@@ -106,7 +253,7 @@
 	}
 	/**
 	 * @function main
-	 */
+	 *
 	function main(){
 		save();
 		update(10);
@@ -126,7 +273,7 @@
 	/**
 	 * @function update
 	 * @argument {number} hour
-	 */
+	 *
 	function update(hour){
 		if(temp.getHours()>hour)
 			temp.setDate(temp.getDate()+1);
@@ -135,13 +282,13 @@
 	/**
 	 * @function {number} parse
 	 * @argument {number} millisecond
-	 */
+	 *
 	function parse(millisecond){
 		return Math.floor(millisecond/3600000);
 	}
 	/**
 	 * @function {boolean} checkImmobile
-	 */
+	 *
 	function checkImmobile(){
 		let flag=false;
 		IMMOBILE_LIST.forEach(function(currentValue,index,array){
@@ -165,14 +312,14 @@
 	}
 	/**
 	 * @function {string} format
-	 */
+	 *
 	function format(){
 		return `${temp.getFullYear()}/${temp.getMonth()+1}/${temp.getDate()} ${temp.getHours()}:${temp.getMinutes()}`;
 	}
 	/**
 	 * @function save
 	 * @argument {Date} date=temp
-	 */
+	 *
 	function save(date){
 		if(date==undefined)
 			date=temp;
@@ -184,7 +331,7 @@
 	}
 	/**
 	 * @function output
-	 */
+	 *
 	function output(){
 		const tr=document.createElement("tr");
 		CACHE_DATA.forEach(function(currentValue,index,array){
@@ -197,14 +344,14 @@
 	}
 	/**
 	 * @function {boolean} checkHoliday
-	 */
+	 *
 	function checkHoliday(){
 		return HOLIDAY_LIST.includes(`${temp.getFullYear()}/${temp.getMonth()+1}/${temp.getDate()}`)||temp.getDay()%6==0;
 	}
 	/**
 	 * @function copyElement
 	 * @argument {HTMLElement} targetElement
-	 */
+	 *
 	function copyElement(targetElement){
 		const range=document.createRange();
 		range.selectNode(targetElement);
@@ -215,3 +362,4 @@
 		selection.removeRange(range);
 	}
 })();
+*/
