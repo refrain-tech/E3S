@@ -35,11 +35,13 @@ function onChange (event) {
   case pickImmobileList:
     fetch(this.files[0]).then(response => response.text()).then(text => {
       imList = text.replace(/\r/g, '').split('\n').filter(currentValue => IM_REGEXP.test(currentValue)).map(currentValue => currentValue.split(/[~_]/));
-      break;
-    case pickHolidayList:
+    });
+    break;
+  case pickHolidayList:
     fetch(this.files[0]).then(response => response.text()).then(text => {
       hoList = text.replace(/\r/g, '').split('\n').filter(currentValue => HO_REGEXP.test(currentValue));
-      break;
+    });
+    break;
   }
 }
 function onClick (event) {
