@@ -23,7 +23,9 @@ const pickImmobileList = document.querySelector('#pickImmobileList'),
 const CACHE_DATA = [ ],
       IM_REGEXP = /.{4}\/.{2}\/.{2}\s.{2}:.{2}~.{4}\/.{2}\/.{2}\s.{2}:.{2}_.+/,
       HO_REGEXP = /.{4}\/.{2}\/.{2}/;
-let base, cache, distance, finish, loop, span, start, temp, total, imList, hoList;
+let base, cache, distance, finish, loop, span, start, temp, total,
+    imList = [ ],
+    hoList = [ ];
 // pickImmobileList.addEventListener('change', onChange, false);
 // pickHolidayList.addEventListener('change', onChange, false);
 clickImmobileListPicker.addEventListener('click', onClick, false);
