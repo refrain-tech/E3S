@@ -28,19 +28,19 @@ const IM_PATTERN = /\d{4}\/\d{2}\/\d{2}\s\d{2}:\d{2}~\d{4}\/\d{2}\/\d{2}\s\d{2}:
 /** @type {RegExp} フォーマット確認用の正規表現 */
 const HO_PATTERN = /\d{4}\/\d{2}\/\d{2}/;
 /** @type {Number} タスクの開始時点の時間(ミリ秒) */
-let base;
+let baseMS;
 /** @type {Number} タスクが実施されていない時間の総和(誤差補正に使用する) */
-let dis;
+let disableTime;
 /** @type {Number} タスクが終了する上限値 */
-let finish;
+let limit;
 /** @type {Number} タスクの行われた回数(誤差補正に使用する) */
 let loop;
 /** @type {Number} タスク毎の時間 */
 let span;
 /** @type {Number} タスクの開始時点での経過時間 */
-let start;
+let base;
 /** @type {Date} 参照を続けるDateオブジェクト */
-let temp;
+let refDate;
 /** @type {Number} タスクの経過時間 */
 let total;
 /** @type {Array<String>} 試験ができない(= 設備が動いていない)期間のリスト */
@@ -96,13 +96,13 @@ function onClick (event) {
  */
 function initialize () {
   total = 0;
-  dis = 0;
-  start = parseInt(inputStart.value);
-  finish = parseInt(inputFinish.value);
+  disableTime = 0;
+  base = parseInt(inputStart.value);
+  limit = parseInt(inputFinish.value);
   span = parseInt(inputSpan.value);
-  loop = (start / span) | 0;
-  temp = new Date(`${inputYear.value}/${inputMonth.value}/${inputDate.value} ${inputHour.value}:${inputMinute.value}`);
-  base = temp.getTime();
+  loop = (base / span) | 0;
+  refDate = new Date(`${inputYear.value}/${inputMonth.value}/${inputDate.value} ${inputHour.value}:${inputMinute.value}`);
+  baseMS = refDate.getTime();
   imList = [ ];
   hoList = [ ];
   CACHE_DATA.length = 0;
@@ -114,8 +114,8 @@ function initialize () {
 function main () {
   save();
   update(10);
-  while ((total = parse(temp.getTime() - base) - 7 * loop - dis + start) < span * (loop + 1) || checkHoliday(temp)) {
-    temp.setDate(temp.getDate() + 1);
+  while ((total = getTotal()) < span * (loop + 1) || checkHoliday()) {
+    refDate.setDate(refDate.getDate() + 1);
     if (checkImmobile()) return true;
   }
   save();
@@ -124,7 +124,14 @@ function main () {
   output();
   loop ++;
   update(17);
-  return total < finish;
+  return total < limit;
+}
+/**
+ * @function getTotal 経過時間を計算する
+ * @return {Number} (現在時刻 - 開始時刻) - 7 x 繰り返し数 - 停止時間 - 初期時間
+ */
+function getTotal () {
+  return parse(refDate.getTime() - baseMS) - 7 * loop - disableTime + base);
 }
 /**
  * @function update Dateオブジェクトを任意の時間に設定する(指定時間が参照時間より前なら、翌日に補正する)
@@ -132,8 +139,8 @@ function main () {
  */
 function update (hour) {
   hour %= 24;
-  if (temp.getHours() > hour) temp.setDate(temp.getDate() + 1);
-  temp.setHours(hour);
+  if (refDate.getHours() > hour) refDate.setDate(refDate.getDate() + 1);
+  refDate.setHours(hour);
 }
 /**
  * @function parse ミリ秒を時間に変換する
@@ -160,12 +167,11 @@ function checkImmobile () {
       // データを保存
       save(stopDate);
       // 経過時間の総和を更新する
-      // 経過時間の総和 = 停止させた時間 - 最初の開始時間 - 7(10時から17時までの7時間) x 実施回数 - 停止させる時間 + 開始時点で経過している時間
-      total = parse(stopDate.getTime() - base) - 7 * loop - dis + start;
+      total = getTotal();
       // 再開させる日時からDateオブジェクトを生成する
-      temp = new Date(restart);
+      refDate = new Date(restart);
       // 停止させていた時間を加算する
-      dis += parse(temp.getTime() - stopDate.getTime());
+      disableTime += parse(refDate.getTime() - stopDate.getTime());
       // データを保存
       CACHE_DATA.push(total);
       // データを保存
@@ -187,15 +193,15 @@ function checkImmobile () {
  */
 function format () {
   return [
-    `${temp.getFullYear()}/${temp.getMonth() + 1}/${temp.getDate()}`,
-    `${temp.getHours()}:${temp.getMinutes()}`
+    `${refDate.getFullYear()}/${refDate.getMonth() + 1}/${refDate.getDate()}`,
+    `${refDate.getHours()}:${refDate.getMinutes()}`
   ];
 }
 /**
  * @function save Dateオブジェクトの各値を保存する
- * @argument {Date} [date = temp] 保存するDateオブジェクト
+ * @argument {Date} [date = refDate] 保存するDateオブジェクト
  */
-function save (date = temp) {
+function save (date = refDate) {
   CACHE_DATA.push(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
 }
 /**
@@ -220,7 +226,7 @@ function output () {
  * @return {Boolean} 参照中の日時が休日か否か
  */
 function checkHoliday () {
-  return hoList.includes(format()[0]) || temp.getDay() % 6 === 0;
+  return hoList.includes(format()[0]) || refDate.getDay() % 6 === 0;
 }
 /**
  * @function copyElement HTML要素をクリップボードにコピーする
