@@ -1,4 +1,4 @@
-use strict';
+'use strict';
 const pickImmobileList = document.querySelector('#pickImmobileList'),
       pickHolidayList = document.querySelector('#pickHolidayList'),
       inputStart = document.querySelector('#inputStart'),
