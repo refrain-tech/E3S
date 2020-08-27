@@ -62,21 +62,10 @@ copyButton.addEventListener('click', onClick, false);
 function onChange (event) {
   switch (this) {
     case pickImmobileList:
-      fetch(this.files[0]).then(response => response.text())
-                          .then(text => {
-        imList = text.replace(/\r/g, '')
-                     .split('\n')
-                     .filter(currentValue => IM_PATTERN.test(currentValue))
-                     .map(currentValue => currentValue.split(/[~_]/));
-      });
+      fetch(this.files[0]).then(response => response.text()).then(text => (imList = text.replace(/\r/g, '').split('\n').filter(currentValue => IM_PATTERN.test(currentValue)).map(currentValue => currentValue.split(/[~_]/))));
       break;
     case pickHolidayList:
-      fetch(this.files[0]).then(response => response.text())
-                          .then(text => {
-        hoList = text.replace(/\r/g, '')
-                     .split('\n')
-                     .filter(currentValue => HO_PATTERN.test(currentValue));
-      });
+      fetch(this.files[0]).then(response => response.text()).then(text => (hoList = text.replace(/\r/g, '').split('\n').filter(currentValue => HO_PATTERN.test(currentValue))));
       break;
   }
 }
@@ -106,14 +95,14 @@ function onClick (event) {
  * @function onClick 全データの初期化処理
  */
 function initialize () {
-  start = parseInt(inputStart.value);
-  span = parseInt(inputSpan.value);
   total = 0;
-  base = temp.getTime();
   dis = 0;
+  start = parseInt(inputStart.value);
   finish = parseInt(inputFinish.value);
+  span = parseInt(inputSpan.value);
   loop = (start / span) | 0;
   temp = new Date(`${inputYear.value}/${inputMonth.value}/${inputDate.value} ${inputHour.value}:${inputMinute.value}`);
+  base = temp.getTime();
   imList = [ ];
   hoList = [ ];
   CACHE_DATA.length = 0;
