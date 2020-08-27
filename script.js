@@ -28,10 +28,15 @@ let base, cache, distance, finish, loop, span, start, temp, total,
     hoList = [ ];
 // pickImmobileList.addEventListener('change', onChange, false);
 // pickHolidayList.addEventListener('change', onChange, false);
-clickImmobileListPicker.addEventListener('click', onClick, false);
-clickHolidayListPicker.addEventListener('click', onClick, false);
+// clickImmobileListPicker.addEventListener('click', onClick, false);
+// clickHolidayListPicker.addEventListener('click', onClick, false);
 runButton.addEventListener('click', onClick, false);
 copyButton.addEventListener('click', onClick, false);
+/**
+ * @function onChange HTML要素のchangeイベント用の関数
+ * @argument {Event} event changeイベント
+ * @this {HTMLElement} changeイベントの発生したHTML要素
+ */
 function onChange (event) {
   switch (this) {
   case pickImmobileList:
@@ -46,6 +51,11 @@ function onChange (event) {
     break;
   }
 }
+/**
+ * @function onClick HTML要素のclickイベント用の関数
+ * @argument {Event} event clickイベント
+ * @this {HTMLElement} clickイベントの発生したHTML要素
+ */
 function onClick (event) {
   switch (this) {
     case clickImmobileListPicker:
@@ -63,7 +73,10 @@ function onClick (event) {
       break;
   }
 }
-function initialize(){
+/**
+ * @function onClick 変数の初期化
+ */
+function initialize () {
   start = parseInt(inputStart.value);
   finish = parseInt(inputFinish.value);
   span = parseInt(inputSpan.value);
@@ -94,6 +107,11 @@ function update (hour) {
   if (temp.getHours() > hour) temp.setDate(temp.getDate() + 1);
   temp.setHours(hour);
 }
+/**
+ * @function onClick ミリ秒を時間に変換する
+ * @argument {Number} millisecond 変換するミリ秒
+ * @return {Number} 変換後の時間
+ */
 function parse (millisecond) {
   return (millisecond / 3600000) | 0;
 }
