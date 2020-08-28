@@ -9,7 +9,7 @@ html {
 body {
   margin: 0;
 }
-#interface {
+#XHEEOREH {
   background-color: lightgray;
   border-bottom: var(--border-dark);
   border-left: var(--border-light);
@@ -22,52 +22,52 @@ body {
   height: 12rem;
   width: 29rem;
 }
-#interface div {
+#XHEEOREH div {
   border-bottom: var(--border-light);
   border-left: var(--border-dark);
   border-right: var(--border-light);
   border-top: var(--border-dark);
   padding: 0.45rem;
 }
-#interface button, #interface input {
+#XHEEOREH button, #XHEEOREH input {
   font: inherit;
   outline: 0;
   padding: 0.45rem;
 }
-#interface input {
+#XHEEOREH input {
   border-bottom: var(--border-light);
   border-left: var(--border-dark);
   border-right: var(--border-light);
   border-top: var(--border-dark);
   text-align: right;
 }
-#interface button {
+#XHEEOREH button {
   border-bottom: var(--border-dark);
   border-left: var(--border-light);
   border-right: var(--border-dark);
   border-top: var(--border-light);
   text-align: center;
 }
-#interface button:active {
+#XHEEOREH button:active {
   border-bottom: var(--border-light);
   border-left: var(--border-dark);
   border-right: var(--border-light);
   border-top: var(--border-dark);
 }
-#resultTable {
+#YR6JWQam {
   border-collapse: collapse;
 }
-#resultTable td, #resultTable th {
+#YR6JWQam td, #YR6JWQam th {
   border: solid 0.05rem black;
   min-width: 2rem;
 }
-#resultTable td {
+#YR6JWQam td {
   text-align: right;
 }
-#resultTable td:nth-child(5n + 6), #resultTable th:nth-child(5n + 6) {
+#YR6JWQam td:nth-child(5n + 6), #YR6JWQam th:nth-child(5n + 6) {
   border-left: solid 0.1rem black;
 }
-#resultTable thead {
+#YR6JWQam thead {
   border-bottom: double 0.15rem black;
   text-align: center;
 }
