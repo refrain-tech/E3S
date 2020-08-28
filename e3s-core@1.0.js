@@ -55,10 +55,16 @@ let hoList;
 // clickHolidayListPicker.addEventListener('click', onClick, false);
 runButton.addEventListener('click', onClick, false);
 copyButton.addEventListener('click', onClick, false);
+
+
+
 /**
  * @function onChange HTML要素のchangeイベント用の関数
  * @argument {Event} event changeイベント
  * @this {HTMLElement} changeイベントの発生したHTML要素
+ * @description イベントの発生元に応じてファイルを読み込ませる
+ *              読み込んだデータの改行シーケンスから\rを削除する
+ * @todo ローカルファイルはfetch出来ない(fakepathになる)ので、FileReaderを使用する
  */
 function onChange (event) {
   switch (this) {
