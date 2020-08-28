@@ -62,8 +62,10 @@ copyButton.addEventListener('click', onClick, false);
  * @function onChange HTML要素のchangeイベント用の関数
  * @argument {Event} event changeイベント
  * @this {HTMLElement} changeイベントの発生したHTML要素
- * @description イベントの発生元に応じてファイルを読み込ませる
- *              読み込んだデータの改行シーケンスから\rを削除する
+ * @description 1. ファイルを読み込ませる
+ *              2. 読み込んだデータの改行シーケンスから\rを削除する
+ *              3. 改行シーケンスで区切った配列にする
+ *              4. フォーマットに従ったデータだけを抽出する
  * @todo ローカルファイルはfetch出来ない(fakepathになる)ので、FileReaderを使用する
  */
 function onChange (event) {
@@ -99,7 +101,7 @@ function onClick (event) {
   }
 }
 /**
- * @function onClick 全データの初期化処理
+ * @function initialize 全データの初期化処理
  */
 function initialize () {
   total = 0;
@@ -130,7 +132,7 @@ function initialize () {
  */
 function main () {
   toCache();
-  update(10);
+  setDate(10);
   while ((total = getTotal()) < span * (loop + 1) || checkHoliday()) {
     refDate.setDate(refDate.getDate() + 1);
     if (checkImmobile()) return true;
@@ -140,21 +142,23 @@ function main () {
   CACHE_DATA.push('');
   arr2table();
   loop ++;
-  update(17);
+  setDate(17);
   return total < limit;
 }
 /**
  * @function getTotal 経過時間を計算する
- * @return {Number} (現在時刻 - 開始時刻) - 7 x 繰り返し数 - 停止時間 - 初期時間
+ * @return {Number} (現在時刻 - 開始時刻) - 7 x ループ回数 - 停止時間 + 初期時間
+ * @description 開始～現在までの時間から、検査の為に取り出していた時間(7時間)と設備が停止していた時間を引き、
+ *              開始時点で経過していた時間を足す
  */
 function getTotal () {
-  return ms2hr(refDate.getTime() - baseMS) - 7 * loop - disableTime + base);
+  return ms2hr(refDate.getTime() - baseMS) - 7 * loop - disableTime + base;
 }
 /**
- * @function update Dateオブジェクトを任意の時間に設定する(指定時間が参照時間より前なら、翌日に補正する)
+ * @function setDate refDateを任意の時間に設定する(指定時間が参照時間より前なら、翌日に補正する)
  * @argument {Number} hour 設定する時間(0 ~ 23に変換される)
  */
-function update (hour) {
+function setDate (hour) {
   hour %= 24;
   if (refDate.getHours() > hour) refDate.setDate(refDate.getDate() + 1);
   refDate.setHours(hour);
@@ -170,6 +174,7 @@ function ms2hr (ms) {
 /**
  * @function checkImmobile imListに含まれる場合に計算を中断させる
  * @return {Boolean} 参照日時がimListに含まれていたか
+ * @description
  */
 function checkImmobile () {
   let stop, restart, reason;
@@ -206,7 +211,7 @@ function checkImmobile () {
 }
 /**
  * @function format 参照中のDateオブジェクトを任意の形式に変換する
- * @return {Array<String>} 指定形式([ YYYY/MM/DD, hh:mm ])に変換されたDateオブジェクト
+ * @return {Array<String>} 指定形式([ YYYY/MM/DD, hh:mm ])に変換されたrefDate
  */
 function format () {
   return [
@@ -227,9 +232,9 @@ function toCache (date = refDate) {
 function arr2table () {
   const tr = document.createElement('tr');
   let td;
-  for (const item of CACHE_DATA) {
+  for (const data of CACHE_DATA) {
     td = document.createElement('td');
-    td.textContent = item;
+    td.textContent = data;
     tr.appendChild(td);
   }
   resultTable.querySelector('tbody').appendChild(tr);
