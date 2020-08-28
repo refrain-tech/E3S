@@ -120,11 +120,11 @@ function onCopy (event) {
  */
 function initialize () {
   total = 0;
-  disableTime = 0;
   base = parseInt(H0jP0Xr4.value);
   limit = parseInt(UJNWVR0g.value);
   span = parseInt(ZHgPpUJS.value);
   loop = (base / span) | 0;
+  disableTime = -7 * loop; // 開始時点で蓄積される停止時間を相殺する
   refDate = new Date(`${iophZzyF.value}/${GFZYmEFU.value}/${QR0Oq3bL.value} ${az1m1nnB.value}:${NMQr9RMs.value}`);
   baseMS = refDate.getTime();
   imList = [ ];
