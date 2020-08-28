@@ -145,8 +145,8 @@ function initialize () {
   disableTime = -7 * loop; // 開始時点で蓄積される停止時間を相殺する
   refDate = new Date(`${iophZzyF.value}/${GFZYmEFU.value}/${QR0Oq3bL.value} ${az1m1nnB.value}:${NMQr9RMs.value}`);
   baseMS = refDate.getTime();
-  imList = [ ];
-  hoList = [ ];
+  imList = imList || [ ];
+  hoList = hoList || [ ];
   CACHE_DATA.length = 0;
   YR6JWQam.querySelector('tbody').innerHTML = '';
 }
