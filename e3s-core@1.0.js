@@ -55,6 +55,7 @@ let hoList;
 // clickHolidayListPicker.addEventListener('click', onClick, false);
 runButton.addEventListener('click', onClick, false);
 copyButton.addEventListener('click', onClick, false);
+document.addEventListener('copy', onCopy, false);
 
 
 
@@ -96,9 +97,21 @@ function onClick (event) {
       while (main());
       break;
     case copyButton:
-      resultTable.copy();
+      document.execCommand('copy');
+      // resultTable.copy();
       break;
   }
+}
+function onCopy (event) {
+  const arr = [ ];
+  let temp;
+  for (const row of resultTable.rows) {
+    temp = [ ];
+    for (const cell of row.cells) temp.push(cell.textContent);
+    arr.push(temp.join('\t'));
+  }
+  event.clipboardData.setData('text/plain', arr.join('\n')); 
+  event.preventDefault();
 }
 /**
  * @function initialize 全データの初期化処理
