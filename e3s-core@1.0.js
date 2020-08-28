@@ -25,9 +25,9 @@ const YR6JWQam = document.querySelector('#resultTable');
 /** @type {Array<Number | String>} 走査中に得られたデータの保存先 */
 const CACHE_DATA = [ ];
 /** @type {RegExp} フォーマット確認用の正規表現 */
-const IM_PATTERN = /\d{4}\/\d{2}\/\d{2}\s\d{2}:\d{2}~\d{4}\/\d{2}\/\d{2}\s\d{2}:\d{2}_.+/;
+const IM_PATTERN = /^\d{4}\/([1-9]|1[0-2])\/([1-9]|1[0-2])\s([1-9]|1[0-2]):([1-9]|1[0-2])~\d{4}\/([1-9]|1[0-2])\/([1-9]|1[0-2])\s([1-9]|1[0-2]):([1-9]|1[0-2])_.+$/;
 /** @type {RegExp} フォーマット確認用の正規表現 */
-const HO_PATTERN = /\d{4}\/\d{2}\/\d{2}/;
+const HO_PATTERN = /^\d{4}\/([1-9]|1[0-2])\/([1-9]|1[0-2])$/;
 /** @type {Number} タスクの開始時点の時間(ミリ秒) */
 let baseMS;
 /** @type {Number} タスクが実施されていない時間の総和(誤差補正に使用する) */
