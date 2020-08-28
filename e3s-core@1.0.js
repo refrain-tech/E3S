@@ -2,6 +2,7 @@
  * @overview e3s-core@1.0.js E3Sの制御プログラム
  * @author Refrain <refrain.tech@gmail.com>
  * @since 2020/8/27
+ * @version 1.0
  * @copyright (c) Copyright 2020 Refrain All Rights Reserved.
  */
 'use strict';
