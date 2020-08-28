@@ -257,8 +257,8 @@ function checkImmobile () {
  */
 function format () {
   return [
-    `${refDate.getFullYear()}/${refDate.getMonth() + 1}/${refDate.getDate()}`,
-    `${refDate.getHours()}:${refDate.getMinutes()}`
+    `${refDate.getFullYear()}/${`0${refDate.getMonth() + 1}`.slice(-2)}/${`0${refDate.getDate()}`.slice(-2)}`,
+    `${`0${refDate.getHours()}`.slice(-2)}:${`0${refDate.getMinutes()}`.slice(-2)}`
   ];
 }
 /**
