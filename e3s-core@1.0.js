@@ -88,7 +88,7 @@ function onClick (event) {
       while (main());
       break;
     case copyButton:
-      copyElement(resultTable);
+      resultTable.copy();
       break;
   }
 }
@@ -111,18 +111,28 @@ function initialize () {
 }
 /**
  * @function main 日程演算のメイン部
+ * @description 1. refDateのデータを保存する
+ *              2. 10時に設定する(標準的な停止時刻)
+ *              3. 経過時間がループ回数 x スパンに満たないか、休日判定であればrefDateを翌日に変更する
+ *              4. 設備を停止させる日なら、trueを返して関数を抜け、親ループを継続する
+ *              5. refDateのデータを保存する
+ *              6. 経過時間と停止理由(停止させないので'')を保存する
+ *              7. データをテーブルに出力する
+ *              8. ループ回数を加算する
+ *              9. 17時に設定する(標準的な再開時刻)
+ *              10. 経過時間が上限に達していないならtrueを返し、親ループを継続する
  */
 function main () {
-  save();
+  toCache();
   update(10);
   while ((total = getTotal()) < span * (loop + 1) || checkHoliday()) {
     refDate.setDate(refDate.getDate() + 1);
     if (checkImmobile()) return true;
   }
-  save();
+  toCache();
   CACHE_DATA.push(total);
   CACHE_DATA.push('');
-  output();
+  arr2table();
   loop ++;
   update(17);
   return total < limit;
@@ -166,7 +176,7 @@ function checkImmobile () {
       // 停止させる日時からDateオブジェクトを生成する
       const stopDate = new Date(stop);
       // データを保存
-      save(stopDate);
+      toCache(stopDate);
       // 経過時間の総和を更新する
       total = getTotal();
       // 再開させる日時からDateオブジェクトを生成する
@@ -178,7 +188,7 @@ function checkImmobile () {
       // データを保存
       CACHE_DATA.push(reason);
       // データを吐き出す
-      output();
+      arr2table();
       // 経過時間の総和が実施回数 x タスク毎の時間を超えていた場合、回数を+1する
       // t時間で停止させるのに2t時間が経過していた場合、ループ回数の修正が必要
       if (total >= (loop + 1) * span) loop ++;
@@ -199,27 +209,24 @@ function format () {
   ];
 }
 /**
- * @function save Dateオブジェクトの各値を保存する
+ * @function toCache Dateオブジェクトの各値を保存する
  * @argument {Date} [date = refDate] 保存するDateオブジェクト
  */
-function save (date = refDate) {
+function toCache (date = refDate) {
   CACHE_DATA.push(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
 }
 /**
- * @function output 得られた日程データをテーブルに出力する
+ * @function arr2table 得られた日程データをテーブルに出力する
  */
-function output () {
+function arr2table () {
   const tr = document.createElement('tr');
   let td;
-  // 全データを<td>要素として出力する
-  CACHE_DATA.forEach(currentValue => {
+  for (const item of CACHE_DATA) {
     td = document.createElement('td');
-    td.textContent = currentValue;
+    td.textContent = item;
     tr.appendChild(td);
-  });
-  // テーブル上に出力する
+  }
   resultTable.querySelector('tbody').appendChild(tr);
-  // データの破棄
   CACHE_DATA.length = 0;
 }
 /**
@@ -227,18 +234,5 @@ function output () {
  * @return {Boolean} 参照中の日時が休日か否か
  */
 function checkHoliday () {
-  return hoList.includes(format()[0]) || refDate.getDay() % 6 === 0;
-}
-/**
- * @function copyElement HTML要素をクリップボードにコピーする
- * @argument {HTMLElement} element コピーするHTML要素
- */
-function copyElement (element) {
-  const range = document.createRange();
-  range.selectNode(element);
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  document.execCommand('copy');
-  selection.removeRange(range);
+  return hoList.includes(format()[0]) || refDate.isWeekend();
 }
