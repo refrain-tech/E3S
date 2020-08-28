@@ -235,8 +235,9 @@ function checkHoliday () {
  *              13. falseを返し関数を終了し、親ループを継続する
  */
 function checkImmobile () {
+  let stop, restart, reason;
   for (const item of imList) {                                    // 1
-    const [ stop, restart, reason ] = item;                             // 2
+    [ stop, restart, reason ] = item;                             // 2
     if (format()[0] !== stop.split(' ')[0]) continue;             // 3
     const stopDate = new Date(stop);                              // 4
     toCache(stopDate);                                            // 5
