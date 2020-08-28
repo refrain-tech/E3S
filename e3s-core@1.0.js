@@ -235,9 +235,8 @@ function checkHoliday () {
  *              13. falseを返し関数を終了し、親ループを継続する
  */
 function checkImmobile () {
-  let stop, restart, reason;
   for (const item of imList) {                                    // 1
-    [ stop, restart, reason ] = item;                             // 2
+    const [ stop, restart, reason ] = item;                             // 2
     if (format()[0] !== stop.split(' ')[0]) continue;             // 3
     const stopDate = new Date(stop);                              // 4
     toCache(stopDate);                                            // 5
@@ -257,9 +256,18 @@ function checkImmobile () {
  */
 function format () {
   return [
-    `${refDate.getFullYear()}/${`0${refDate.getMonth() + 1}`.slice(-2)}/${`0${refDate.getDate()}`.slice(-2)}`,
-    `${`0${refDate.getHours()}`.slice(-2)}:${`0${refDate.getMinutes()}`.slice(-2)}`
+    `${refDate.getFullYear()}/${pad0(refDate.getMonth() + 1, 2)}/${pad0(refDate.getDate(), 2)}`,
+    `${pad0(refDate.getHours(), 2)}:${pad0(refDate.getMinutes(), 2)}`
   ];
+}
+/**
+ * @function pad0 数値の先頭を0で埋め、指定の桁数で返す
+ * @argument {Number} value 0で埋める値
+ * @argument {Number} length 切り取る桁数
+ * @return {String} 0で埋めて切り取られた文字列
+ */
+function pad0 (value, length) {
+  return ('0'.repeat(length) + value).slice(-length);
 }
 /**
  * @function arr2table 得られた日程データをテーブルに出力する
