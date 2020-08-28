@@ -55,12 +55,11 @@ let hoList;
 // clickHolidayListPicker.addEventListener('click', onClick, false);
 runButton.addEventListener('click', onClick, false);
 copyButton.addEventListener('click', onClick, false);
-document.addEventListener('copy', onCopy, false);
 
 
 
 /**
- * @function onChange HTML要素のchangeイベント用の関数
+ * @function onChange changeイベント用の関数
  * @argument {Event} event changeイベント
  * @this {HTMLElement} changeイベントの発生したHTML要素
  * @description 1. ファイルを読み込ませる
@@ -80,7 +79,7 @@ function onChange (event) {
   }
 }
 /**
- * @function onClick HTML要素のclickイベント用の関数
+ * @function onClick clickイベント用の関数
  * @argument {Event} event clickイベント
  * @this {HTMLElement} clickイベントの発生したHTML要素
  */
@@ -97,21 +96,24 @@ function onClick (event) {
       while (main());
       break;
     case copyButton:
+      document.addEventListener('copy', onCopy, false);
       document.execCommand('copy');
-      // resultTable.copy();
       break;
   }
 }
+/**
+ * @function onCopy copyイベント用の関数
+ * @argument {Event} event clickイベント
+ * @description 1. テーブルのセルの値を\tと\nで結合する
+ *              2. データをclipboardDataに渡す
+ *              3. イベントをキャンセルする
+ *              4. イベントハンドラを削除する
+ */
 function onCopy (event) {
-  const arr = [ ];
-  let temp;
-  for (const row of resultTable.rows) {
-    temp = [ ];
-    for (const cell of row.cells) temp.push(cell.textContent);
-    arr.push(temp.join('\t'));
-  }
-  event.clipboardData.setData('text/plain', arr.join('\n')); 
+  const text = [ ].map.call(resultTable.rows, row => [ ].map.call(row.cells, cell => cell.textContent).join('\t')).join('\n');
+  event.clipboardData.setData('text/plain', text);
   event.preventDefault();
+  document.removeEventListener('copy', onCopy, false);
 }
 /**
  * @function initialize 全データの初期化処理
