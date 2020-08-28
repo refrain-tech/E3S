@@ -131,7 +131,7 @@ function main () {
  * @return {Number} (現在時刻 - 開始時刻) - 7 x 繰り返し数 - 停止時間 - 初期時間
  */
 function getTotal () {
-  return parse(refDate.getTime() - baseMS) - 7 * loop - disableTime + base);
+  return ms2hr(refDate.getTime() - baseMS) - 7 * loop - disableTime + base);
 }
 /**
  * @function update Dateオブジェクトを任意の時間に設定する(指定時間が参照時間より前なら、翌日に補正する)
@@ -143,12 +143,12 @@ function update (hour) {
   refDate.setHours(hour);
 }
 /**
- * @function parse ミリ秒を時間に変換する
- * @argument {Number} millisecond 変換するミリ秒
+ * @function ms2hr ミリ秒を時間に変換する
+ * @argument {Number} ms 変換するミリ秒
  * @return {Number} 変換後の時間
  */
-function parse (millisecond) {
-  return (millisecond / 3600000) | 0;
+function ms2hr (ms) {
+  return (ms / 3600000) | 0;
 }
 /**
  * @function checkImmobile imListに含まれる場合に計算を中断させる
@@ -171,7 +171,7 @@ function checkImmobile () {
       // 再開させる日時からDateオブジェクトを生成する
       refDate = new Date(restart);
       // 停止させていた時間を加算する
-      disableTime += parse(refDate.getTime() - stopDate.getTime());
+      disableTime += ms2hr(refDate.getTime() - stopDate.getTime());
       // データを保存
       CACHE_DATA.push(total);
       // データを保存
