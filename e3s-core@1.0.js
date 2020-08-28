@@ -7,13 +7,13 @@
  */
 'use strict';
 /** @type {HTMLElement} GUI部品を取得する */
-// const bC5BNbE0 = document.querySelector('#pickImmobileList');
-// const TZg6mWYC = document.querySelector('#pickHolidayList');
+const bC5BNbE0 = document.querySelector('#pickImmobileList');
+const TZg6mWYC = document.querySelector('#pickHolidayList');
 const H0jP0Xr4 = document.querySelector('#inputStart');
 const UJNWVR0g = document.querySelector('#inputFinish');
 const ZHgPpUJS = document.querySelector('#inputSpan');
-// const SlJmrB3l = document.querySelector('#clickImmobileListPicker');
-// const F8tWfFbD = document.querySelector('#clickHolidayListPicker');
+const SlJmrB3l = document.querySelector('#clickImmobileListPicker');
+const F8tWfFbD = document.querySelector('#clickHolidayListPicker');
 const iophZzyF = document.querySelector('#inputYear');
 const GFZYmEFU = document.querySelector('#inputMonth');
 const QR0Oq3bL = document.querySelector('#inputDate');
@@ -49,10 +49,10 @@ let imList;
 /** @type {Array<String>} 対応ができない(= 設備が動いている)日付のリスト */
 let hoList;
 /** @summary イベントハンドラの登録 */
-// bC5BNbE0.addEventListener('change', onChange, false);
-// TZg6mWYC.addEventListener('change', onChange, false);
-// SlJmrB3l.addEventListener('click', onClick, false);
-// F8tWfFbD.addEventListener('click', onClick, false);
+bC5BNbE0.addEventListener('change', onChange, false);
+TZg6mWYC.addEventListener('change', onChange, false);
+SlJmrB3l.addEventListener('click', onClick, false);
+F8tWfFbD.addEventListener('click', onClick, false);
 Dekkg8Z2.addEventListener('click', onClick, false);
 dJLELTrV.addEventListener('click', onClick, false);
 /**
@@ -63,15 +63,23 @@ dJLELTrV.addEventListener('click', onClick, false);
  *              2. 読み込んだデータの改行シーケンスから\rを削除する
  *              3. 改行シーケンスで区切った配列にする
  *              4. フォーマットに従ったデータだけを抽出する
- * @todo ローカルファイルはfetch出来ない(fakepathになる)ので、FileReaderに変更する
  */
 function onChange (event) {
   switch (this) {
     case bC5BNbE0:
-      fetch(this.files[0]).then(response => response.text()).then(text => (imList = text.replace(/\r/g, '').split('\n').filter(currentValue => IM_PATTERN.test(currentValue)).map(currentValue => currentValue.split(/[~_]/))));
+      readFile(this.files[0]).then(result => {
+        imList = result.replace(/\r/g, '')
+                       .split('\n')
+                       .filter(currentValue => IM_PATTERN.test(currentValue))
+                       .map(currentValue => currentValue.split(/[~_]/));
+      });
       break;
     case TZg6mWYC:
-      fetch(this.files[0]).then(response => response.text()).then(text => (hoList = text.replace(/\r/g, '').split('\n').filter(currentValue => HO_PATTERN.test(currentValue))));
+      readFile(this.files[0]).then(result => {
+        hoList = result.replace(/\r/g, '')
+                       .split('\n')
+                       .filter(currentValue => HO_PATTERN.test(currentValue));
+      });
       break;
   }
 }
@@ -82,15 +90,12 @@ function onChange (event) {
  */
 function onClick (event) {
   switch (this) {
-    /**
-     * @deprecated システム構成未完了の為
-     * case SlJmrB3l:
-     *   bC5BNbE0.click();
-     *   break;
-     * case F8tWfFbD:
-     *   TZg6mWYC.click();
-     *   break;
-     */
+    case SlJmrB3l:
+      bC5BNbE0.click();
+      break;
+    case F8tWfFbD:
+      TZg6mWYC.click();
+      break;
     case Dekkg8Z2:
       initialize();
       while (main());
@@ -114,6 +119,19 @@ function onCopy (event) {
   event.clipboardData.setData('text/plain', text);
   event.preventDefault();
   document.removeEventListener('copy', onCopy, false);
+}
+/**
+ * @function readFile ファイルを読み込む
+ * @argument {File} file 読み込む対象のFileオブジェクト
+ * @return {Promise} 読み込みを実行するPromiseオブジェクト
+ */
+function readFile (file) {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.addEventListener('error', event => reject(fileReader.error), false);
+    fileReader.addEventListener('load', event => resolve(fileReader.result), false);
+    fileReader.readAsText(file, 'utf-8');
+  });
 }
 /**
  * @function initialize 全データの初期化処理
@@ -146,28 +164,25 @@ function initialize () {
  *              10. 経過時間が上限に達していないならtrueを返し、親ループを継続する
  */
 function main () {
-  toCache(); // 1
-  setDate(10); // 2
+  toCache();                                                           // 1
+  setDate(10);                                                         // 2
   while ((total = getTotal()) < span * (loop + 1) || checkHoliday()) { // 3
     refDate.setDate(refDate.getDate() + 1);
-    if (checkImmobile()) return true; // 4
+    if (checkImmobile()) return true;                                  // 4
   }
-  toCache(); // 5
-  CACHE_DATA.push(total); // 6
-  CACHE_DATA.push(''); // 6
-  arr2table(); // 7
-  loop ++; // 8
-  setDate(17); // 9
-  return total < limit; // 10
+  toCache();                                                           // 5
+  CACHE_DATA.push(total, '');                                          // 6
+  arr2table();                                                         // 7
+  loop ++;                                                             // 8
+  setDate(17);                                                         // 9
+  return total < limit;                                                // 10
 }
 /**
- * @function getTotal 経過時間を計算する
- * @return {Number} (現在時刻 - 開始時刻) - 7 x ループ回数 - 停止時間 + 初期時間
- * @description 開始～現在までの時間から、検査の為に取り出していた時間(7時間)と設備が停止していた時間を引き、
- *              開始時点で経過していた時間を足す
+ * @function toCache Dateオブジェクトの各値を保存する
+ * @argument {Date} [date = refDate] 保存するDateオブジェクト
  */
-function getTotal () {
-  return ms2hr(refDate.getTime() - baseMS) - 7 * loop - disableTime + base;
+function toCache (date = refDate) {
+  CACHE_DATA.push(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
 }
 /**
  * @function setDate refDateを任意の時間に設定する(指定時間が参照時間より前なら、翌日に補正する)
@@ -179,12 +194,28 @@ function setDate (hour) {
   refDate.setHours(hour);
 }
 /**
+ * @function getTotal 経過時間を計算する
+ * @return {Number} (現在時刻 - 開始時刻) - 7 x ループ回数 - 停止時間 + 初期時間
+ * @description 開始～現在までの時間から、検査の為に取り出していた時間(7時間)と設備が停止していた時間を引き、
+ *              開始時点で経過していた時間を足す
+ */
+function getTotal () {
+  return ms2hr(refDate.getTime() - baseMS) - 7 * loop - disableTime + base;
+}
+/**
  * @function ms2hr ミリ秒を時間に変換する
  * @argument {Number} ms 変換するミリ秒
  * @return {Number} 変換後の時間
  */
 function ms2hr (ms) {
   return (ms / 3600000) | 0;
+}
+/**
+ * @function checkHoliday 参照中の日時が休日(hoListに含まれるか土日)かを取得する
+ * @return {Boolean} 参照中の日時が休日か否か
+ */
+function checkHoliday () {
+  return hoList.includes(format()[0]) || refDate.isWeekend();
 }
 /**
  * @function checkImmobile imListに含まれる場合に計算を中断させる
@@ -205,21 +236,20 @@ function ms2hr (ms) {
  */
 function checkImmobile () {
   let stop, restart, reason;
-  for (const item of imList) { // 1
-    [ stop, restart, reason ] = item; // 2
-    if (format()[0] !== stop.split(' ')[0]) continue; //3
-    const stopDate = new Date(stop); // 4
-    toCache(stopDate); // 5
-    total = getTotal(); // 6
-    refDate = new Date(restart); // 7
+  for (const item of imList) {                                    // 1
+    [ stop, restart, reason ] = item;                             // 2
+    if (format()[0] !== stop.split(' ')[0]) continue;             // 3
+    const stopDate = new Date(stop);                              // 4
+    toCache(stopDate);                                            // 5
+    total = getTotal();                                           // 6
+    refDate = new Date(restart);                                  // 7
     disableTime += ms2hr(refDate.getTime() - stopDate.getTime()); // 8
-    CACHE_DATA.push(total); // 9
-    CACHE_DATA.push(reason);
-    arr2table(); // 10
-    if (total >= (loop + 1) * span) loop ++; // 11
-    return true; // 12
+    CACHE_DATA.push(total, reason);                               // 9
+    arr2table();                                                  // 10
+    if (total >= (loop + 1) * span) loop ++;                      // 11
+    return true;                                                  // 12
   }
-  return false; // 13
+  return false;                                                   // 13
 }
 /**
  * @function format 参照中のDateオブジェクトを任意の形式に変換する
@@ -230,13 +260,6 @@ function format () {
     `${refDate.getFullYear()}/${refDate.getMonth() + 1}/${refDate.getDate()}`,
     `${refDate.getHours()}:${refDate.getMinutes()}`
   ];
-}
-/**
- * @function toCache Dateオブジェクトの各値を保存する
- * @argument {Date} [date = refDate] 保存するDateオブジェクト
- */
-function toCache (date = refDate) {
-  CACHE_DATA.push(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
 }
 /**
  * @function arr2table 得られた日程データをテーブルに出力する
@@ -251,11 +274,4 @@ function arr2table () {
   }
   YR6JWQam.querySelector('tbody').appendChild(tr);
   CACHE_DATA.length = 0;
-}
-/**
- * @function checkHoliday 参照中の日時が休日(hoListに含まれるか土日)かを取得する
- * @return {Boolean} 参照中の日時が休日か否か
- */
-function checkHoliday () {
-  return hoList.includes(format()[0]) || refDate.isWeekend();
 }
