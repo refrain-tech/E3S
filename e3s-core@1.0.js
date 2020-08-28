@@ -55,9 +55,6 @@ let hoList;
 // clickHolidayListPicker.addEventListener('click', onClick, false);
 runButton.addEventListener('click', onClick, false);
 copyButton.addEventListener('click', onClick, false);
-
-
-
 /**
  * @function onChange changeイベント用の関数
  * @argument {Event} event changeイベント
@@ -66,7 +63,7 @@ copyButton.addEventListener('click', onClick, false);
  *              2. 読み込んだデータの改行シーケンスから\rを削除する
  *              3. 改行シーケンスで区切った配列にする
  *              4. フォーマットに従ったデータだけを抽出する
- * @todo ローカルファイルはfetch出来ない(fakepathになる)ので、FileReaderを使用する
+ * @todo ローカルファイルはfetch出来ない(fakepathになる)ので、FileReaderに変更する
  */
 function onChange (event) {
   switch (this) {
@@ -85,12 +82,15 @@ function onChange (event) {
  */
 function onClick (event) {
   switch (this) {
-    case clickImmobileListPicker:
-      pickImmobileList.click();
-      break;
-    case clickHolidayListPicker:
-      pickHolidayList.click();
-      break;
+    /**
+     * @deprecated システム構成未完了の為
+     * case clickImmobileListPicker:
+     *   pickImmobileList.click();
+     *   break;
+     * case clickHolidayListPicker:
+     *   pickHolidayList.click();
+     *   break;
+     */
     case runButton:
       initialize();
       while (main());
@@ -136,29 +136,29 @@ function initialize () {
  * @function main 日程演算のメイン部
  * @description 1. refDateのデータを保存する
  *              2. 10時に設定する(標準的な停止時刻)
- *              3. 経過時間がループ回数 x スパンに満たないか、休日判定であればrefDateを翌日に変更する
+ *              3. 経過時間を更新し、経過時間がループ回数 x スパンに満たないか、休日判定であればrefDateを翌日に変更する
  *              4. 設備を停止させる日なら、trueを返して関数を抜け、親ループを継続する
  *              5. refDateのデータを保存する
  *              6. 経過時間と停止理由(停止させないので'')を保存する
  *              7. データをテーブルに出力する
- *              8. ループ回数を加算する
+ *              8. ループ回数を+1する
  *              9. 17時に設定する(標準的な再開時刻)
  *              10. 経過時間が上限に達していないならtrueを返し、親ループを継続する
  */
 function main () {
-  toCache();
-  setDate(10);
-  while ((total = getTotal()) < span * (loop + 1) || checkHoliday()) {
+  toCache(); // 1
+  setDate(10); // 2
+  while ((total = getTotal()) < span * (loop + 1) || checkHoliday()) { // 3
     refDate.setDate(refDate.getDate() + 1);
-    if (checkImmobile()) return true;
+    if (checkImmobile()) return true; // 4
   }
-  toCache();
-  CACHE_DATA.push(total);
-  CACHE_DATA.push('');
-  arr2table();
-  loop ++;
-  setDate(17);
-  return total < limit;
+  toCache(); // 5
+  CACHE_DATA.push(total); // 6
+  CACHE_DATA.push(''); // 6
+  arr2table(); // 7
+  loop ++; // 8
+  setDate(17); // 9
+  return total < limit; // 10
 }
 /**
  * @function getTotal 経過時間を計算する
@@ -189,40 +189,37 @@ function ms2hr (ms) {
 /**
  * @function checkImmobile imListに含まれる場合に計算を中断させる
  * @return {Boolean} 参照日時がimListに含まれていたか
- * @description
+ * @description 1. imListをfor...ofでループする
+ *              2. 得られたデータをそれぞれの変数に代入する
+ *              3. refDateの日付と停止日が一致しなければ、ループを再開する
+ *              4. 停止日をDateオブジェクトにする
+ *              5. stopDateのデータを保存する
+ *              6. 経過時間を更新する
+ *              7. refDateを再開日にする
+ *              8. refDate - stopDateで停止させていた時間を取得する
+ *              9. 経過時間と停止理由を保存する
+ *              10. データをテーブルに出力する
+ *              11. 経過時間がループ数 x スパンを超えている場合、ループ数を+1する
+ *              12. trueを返し関数を終了し、親ループを終了する
+ *              13. falseを返し関数を終了し、親ループを継続する
  */
 function checkImmobile () {
   let stop, restart, reason;
-  // imListを走査する
-  for (const item of imList) {
-    // 停止させる日時、再開させる日時、停止させる理由を取得する
-    [ stop, restart, reason ] = item;
-    // 参照中の日付が停止させる日付と一致した場合
-    if (format()[0] === stop.split(' ')[0]) {
-      // 停止させる日時からDateオブジェクトを生成する
-      const stopDate = new Date(stop);
-      // データを保存
-      toCache(stopDate);
-      // 経過時間の総和を更新する
-      total = getTotal();
-      // 再開させる日時からDateオブジェクトを生成する
-      refDate = new Date(restart);
-      // 停止させていた時間を加算する
-      disableTime += ms2hr(refDate.getTime() - stopDate.getTime());
-      // データを保存
-      CACHE_DATA.push(total);
-      // データを保存
-      CACHE_DATA.push(reason);
-      // データを吐き出す
-      arr2table();
-      // 経過時間の総和が実施回数 x タスク毎の時間を超えていた場合、回数を+1する
-      // t時間で停止させるのに2t時間が経過していた場合、ループ回数の修正が必要
-      if (total >= (loop + 1) * span) loop ++;
-      // 走査を終了する
-      return true;
-    }
+  for (const item of imList) { // 1
+    [ stop, restart, reason ] = item; // 2
+    if (format()[0] !== stop.split(' ')[0]) continue; //3
+    const stopDate = new Date(stop); // 4
+    toCache(stopDate); // 5
+    total = getTotal(); // 6
+    refDate = new Date(restart); // 7
+    disableTime += ms2hr(refDate.getTime() - stopDate.getTime()); // 8
+    CACHE_DATA.push(total); // 9
+    CACHE_DATA.push(reason);
+    arr2table(); // 10
+    if (total >= (loop + 1) * span) loop ++; // 11
+    return true; // 12
   }
-  return false;
+  return false; // 13
 }
 /**
  * @function format 参照中のDateオブジェクトを任意の形式に変換する
