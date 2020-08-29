@@ -28,8 +28,8 @@ const CACHE_DATA = [ ];
 const IM_PATTERN = /^\d{4}\/\d{2}\/\d{2}\s\d{2}:\d{2}~\d{4}\/\d{2}\/\d{2}\s\d{2}:\d{2}_.+$/;
 /** @type {RegExp} フォーマット確認用の正規表現 */
 const HO_PATTERN = /^\d{4}\/\d{2}\/\d{2}$/;
-/** @type {Number} タスクの開始時点の時間(ミリ秒) */
-let baseMS;
+/** @type {Date} タスクの開始時点のDateオブジェクト */
+let baseDate;
 /** @type {Number} タスクが実施されていない時間の総和(誤差補正に使用する) */
 let disableTime;
 /** @type {Number} タスクが終了する上限値 */
@@ -59,27 +59,23 @@ dJLELTrV.addEventListener('click', onClick, false);
  * @function onChange changeイベント用の関数
  * @argument {Event} event changeイベント
  * @this {HTMLElement} changeイベントの発生したHTML要素
- * @description 1. ファイルを読み込ませる
- *              2. 読み込んだデータの改行シーケンスから\rを削除する
- *              3. 改行シーケンスで区切った配列にする
- *              4. フォーマットに従ったデータだけを抽出する
  */
 function onChange (event) {
   switch (this) {
     case bC5BNbE0:
-      readFile(this.files[0]).then(result => {
-        imList = result.replace(/\r/g, '')
-                       .split('\n')
-                       .filter(currentValue => IM_PATTERN.test(currentValue))
-                       .map(currentValue => currentValue.split(/[~_]/));
-      });
+      readFile(this.files[0])
+          .then(result => imList = result.replace(/\r/g, '')
+                                         .split('\n')
+                                         .filter(currentValue => IM_PATTERN.test(currentValue))
+                                         .map(currentValue => currentValue.split(/[~_]/)))
+          .catch(console.error);
       break;
     case TZg6mWYC:
-      readFile(this.files[0]).then(result => {
-        hoList = result.replace(/\r/g, '')
-                       .split('\n')
-                       .filter(currentValue => HO_PATTERN.test(currentValue));
-      });
+      readFile(this.files[0])
+          .then(result => hoList = result.replace(/\r/g, '')
+                                         .split('\n')
+                                         .filter(currentValue => HO_PATTERN.test(currentValue)))
+          .catch(console.error);
       break;
   }
 }
@@ -97,7 +93,7 @@ function onClick (event) {
       TZg6mWYC.click();
       break;
     case Dekkg8Z2:
-      initialize();
+      init();
       while (main());
       break;
     case dJLELTrV:
@@ -134,17 +130,17 @@ function readFile (file) {
   });
 }
 /**
- * @function initialize 全データの初期化処理
+ * @function init 全データの初期化処理
  */
-function initialize () {
+function init () {
   total = 0;
   base = parseInt(H0jP0Xr4.value);
   limit = parseInt(UJNWVR0g.value);
   span = parseInt(ZHgPpUJS.value);
   loop = (base / span) | 0;
   disableTime = -7 * loop; // 開始時点で蓄積される停止時間を相殺する
-  refDate = new Date(`${iophZzyF.value}/${GFZYmEFU.value}/${QR0Oq3bL.value} ${az1m1nnB.value}:${NMQr9RMs.value}`);
-  baseMS = refDate.getTime();
+  baseDate = new Date(`${iophZzyF.value}/${GFZYmEFU.value}/${QR0Oq3bL.value} ${az1m1nnB.value}:${NMQr9RMs.value}`);
+  refDate = baseDate;
   imList = imList || [ ];
   hoList = hoList || [ ];
   CACHE_DATA.length = 0;
@@ -154,14 +150,14 @@ function initialize () {
  * @function main 日程演算のメイン部
  * @description 1. refDateのデータを保存する
  *              2. 10時に設定する(標準的な停止時刻)
- *              3. 経過時間を更新し、経過時間がループ回数 x スパンに満たないか、休日判定であればrefDateを翌日に変更する
+ *              3. 経過時間を更新し、経過時間 < ループ回数 x スパンか、休日判定であればrefDateを翌日に変更する
  *              4. 設備を停止させる日なら、trueを返して関数を抜け、親ループを継続する
  *              5. refDateのデータを保存する
  *              6. 経過時間と停止理由(停止させないので'')を保存する
  *              7. データをテーブルに出力する
  *              8. ループ回数を+1する
  *              9. 17時に設定する(標準的な再開時刻)
- *              10. 経過時間が上限に達していないならtrueを返し、親ループを継続する
+ *              10. 経過時間が上限に達しているかを返し、親ループを制御する
  */
 function main () {
   toCache();                                                           // 1
@@ -200,7 +196,7 @@ function setDate (hour) {
  *              開始時点で経過していた時間を足す
  */
 function getTotal () {
-  return ms2hr(refDate.getTime() - baseMS) - 7 * loop - disableTime + base;
+  return ms2hr(refDate.getTime() - baseDate.getTime()) - 7 * loop - disableTime + base;
 }
 /**
  * @function ms2hr ミリ秒を時間に変換する
