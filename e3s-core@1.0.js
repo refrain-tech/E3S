@@ -105,10 +105,6 @@ function onClick (event) {
 /**
  * @function onCopy copyイベント用の関数
  * @argument {Event} event clickイベント
- * @description 1. テーブルのセルの値を\tと\nで結合する
- *              2. データをclipboardDataに渡す
- *              3. イベントをキャンセルする
- *              4. イベントハンドラを削除する
  */
 function onCopy (event) {
   const text = [ ].map.call(YR6JWQam.rows, row => [ ].map.call(row.cells, cell => cell.textContent).join('\t')).join('\n');
@@ -140,8 +136,8 @@ function init () {
   loop = (base / span) | 0;
   disableTime = -7 * loop; // 開始時点で蓄積される停止時間を相殺する
   baseDate = new Date(`${iophZzyF.value}/${GFZYmEFU.value}/${QR0Oq3bL.value} ${az1m1nnB.value}:${NMQr9RMs.value}`);
-  refDate = new Date(baseDate);
-  imList = imList || [ ];
+  refDate = new Date(baseDate); // オブジェクトは参照渡しになるので、baseDateを引数に作成する
+  imList = imList || [ ]; // データが存在している場合はそのデータを、存在していないなら空の配列を代入する
   hoList = hoList || [ ];
   CACHE_DATA.length = 0;
   YR6JWQam.querySelector('tbody').innerHTML = '';
@@ -192,8 +188,7 @@ function setDate (hour) {
 /**
  * @function getTotal 経過時間を計算する
  * @return {Number} (現在時刻 - 開始時刻) - 7 x ループ回数 - 停止時間 + 初期時間
- * @description 開始～現在までの時間から、検査の為に取り出していた時間(7時間)と設備が停止していた時間を引き、
- *              開始時点で経過していた時間を足す
+ * @description 開始～現在までの時間から、7時間と設備が停止していた時間を引き、開始時点で経過していた時間を足す
  */
 function getTotal () {
   return ms2hr(refDate.getTime() - baseDate.getTime()) - 7 * loop - disableTime + base;
