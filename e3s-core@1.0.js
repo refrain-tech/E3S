@@ -167,7 +167,7 @@ function main () {
     if (checkImmobile()) return true;                                  // 4
   }
   toCache();                                                           // 5
-  CACHE_DATA.push(total, '');                                          // 6
+  CACHE_DATA.push(total, total - total % span);                        // 6
   arr2table();                                                         // 7
   loop ++;                                                             // 8
   setDate(17);                                                         // 9
