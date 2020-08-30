@@ -51,6 +51,24 @@ function loadHoList (file) {
       .catch(console.error);
 }
 /**
+ * @function loadConfig コンフィグファイルの読み込み
+ * @argument {File} file 読み込み対象のファイル
+ */
+function loadConfig (file) {
+  readFile(file).then(result => result.replace(/\r/g, '').split('\n').forEach(value => {
+    switch (true) {
+      case IM_PATTERN.test(value):
+        hoList.push(value.split(/[~_]/));
+        break;
+      case HO_PATTERN.test(value):
+        hoList.push(value);
+        break;
+      default:
+        break;
+    }
+  })).catch(console.error);
+}
+/**
  * @function readFile ファイルを読み込む
  * @argument {File} file 読み込む対象のFileオブジェクト
  * @return {Promise} 読み込みを実行するPromiseオブジェクト
