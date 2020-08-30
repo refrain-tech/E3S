@@ -55,6 +55,10 @@ SlJmrB3l.addEventListener('click', onClick, false);
 F8tWfFbD.addEventListener('click', onClick, false);
 Dekkg8Z2.addEventListener('click', onClick, false);
 dJLELTrV.addEventListener('click', onClick, false);
+SlJmrB3l.addEventListener('dragover', onDragover, false);
+F8tWfFbD.addEventListener('dragover', onDragover, false);
+SlJmrB3l.addEventListener('drop', onDrop, false);
+F8tWfFbD.addEventListener('drop', onDrop, false);
 /**
  * @function onChange changeイベント用の関数
  * @argument {Event} event changeイベント
@@ -63,19 +67,10 @@ dJLELTrV.addEventListener('click', onClick, false);
 function onChange (event) {
   switch (this) {
     case bC5BNbE0:
-      readFile(this.files[0])
-          .then(result => imList = result.replace(/\r/g, '')
-                                         .split('\n')
-                                         .filter(currentValue => IM_PATTERN.test(currentValue))
-                                         .map(currentValue => currentValue.split(/[~_]/)))
-          .catch(console.error);
+      loadImList(this.files[0]);
       break;
     case TZg6mWYC:
-      readFile(this.files[0])
-          .then(result => hoList = result.replace(/\r/g, '')
-                                         .split('\n')
-                                         .filter(currentValue => HO_PATTERN.test(currentValue)))
-          .catch(console.error);
+      loadHoList(this.files[0]);
       break;
   }
 }
@@ -111,6 +106,57 @@ function onCopy (event) {
   event.clipboardData.setData('text/plain', text);
   event.preventDefault();
   document.removeEventListener('copy', onCopy, false);
+}
+/**
+ * @function onDragover dragoverイベント用の関数
+ * @argument {Event} event dragoverイベント
+ */
+function onDragover (event) {
+  switch (this) {
+    case SlJmrB3l:
+    case F8tWfFbD:
+      event.stopPropagation();
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'copy';
+      break;
+  }
+}
+/**
+ * @function onDrop dropイベント用の関数
+ * @argument {Event} event dropイベント
+ */
+function onDrop (event) {
+  const file = event.dataTransfer.files[0];
+  switch (this) {
+    case SlJmrB3l:
+      event.stopPropagation();
+      event.preventDefault();
+      loadImList(file);
+      break;
+    case F8tWfFbD:
+      event.stopPropagation();
+      event.preventDefault();
+      loadHoList(file);
+      break;
+  }
+}
+/**
+ * @function loadImList imList生成用の関数
+ * @argument {File} file 読み込み対象のファイル
+ */
+function loadImList (file) {
+  readFile(file)
+      .then(result => imList = result.replace(/\r/g, '').split('\n').filter(value => IM_PATTERN.test(value)).map(value => value.split(/[~_]/)))
+      .catch(console.error);
+}
+/**
+ * @function loadHoList hoList生成用の関数
+ * @argument {File} file 読み込み対象のファイル
+ */
+function loadHoList (file) {
+  readFile(file)
+      .then(result => hoList = result.replace(/\r/g, '').split('\n').filter(value => HO_PATTERN.test(value)))
+      .catch(console.error);
 }
 /**
  * @function readFile ファイルを読み込む
