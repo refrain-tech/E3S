@@ -46,6 +46,8 @@ function onChange (event) {
     case TZg6mWYC:
       loadHoList(this.files[0]);
       break;
+    default:
+      break;
   }
 }
 /**
@@ -68,6 +70,8 @@ function onClick (event) {
     case dJLELTrV:
       document.addEventListener('copy', onCopy, false);
       document.execCommand('copy');
+      break;
+    default:
       break;
   }
 }
@@ -94,6 +98,8 @@ function onDragover (event) {
       event.preventDefault();
       event.dataTransfer.dropEffect = 'copy';
       break;
+    default:
+      break;
   }
 }
 /**
@@ -102,17 +108,15 @@ function onDragover (event) {
  * @this {HTMLElement} イベントの発生したHTML要素
  */
 function onDrop (event) {
-  const file = event.dataTransfer.files[0];
   switch (this) {
     case SlJmrB3l:
-      event.stopPropagation();
-      event.preventDefault();
-      loadImList(file);
-      break;
     case F8tWfFbD:
+      const file = event.dataTransfer.files[0];
       event.stopPropagation();
       event.preventDefault();
-      loadHoList(file);
+      this === SlJmrB3l ? loadImList(file) : loadHoList(file);
+      break;
+    default:
       break;
   }
 }
