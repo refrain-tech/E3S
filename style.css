@@ -5,6 +5,7 @@
 }
 html {
   font: 20px monospace;
+  user-select: none;
 }
 body {
   margin: 0;
