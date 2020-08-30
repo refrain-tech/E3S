@@ -4,7 +4,7 @@
   --border-light: solid 0.05rem white;
 }
 html {
-  color: var(--darkgray):
+  color: var(--darkgray);
   font: 20px monospace;
   user-select: none;
 }
