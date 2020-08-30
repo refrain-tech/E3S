@@ -7,12 +7,10 @@
  */
 'use strict';
 /** @type {HTMLElement} GUI部品を取得する */
-// const bC5BNbE0 = document.querySelector('#bC5BNbE0');
 const TZg6mWYC = document.querySelector('#TZg6mWYC');
 const H0jP0Xr4 = document.querySelector('#H0jP0Xr4');
 const UJNWVR0g = document.querySelector('#UJNWVR0g');
 const ZHgPpUJS = document.querySelector('#ZHgPpUJS');
-// const SlJmrB3l = document.querySelector('#SlJmrB3l');
 const F8tWfFbD = document.querySelector('#F8tWfFbD');
 const iophZzyF = document.querySelector('#iophZzyF');
 const GFZYmEFU = document.querySelector('#GFZYmEFU');
@@ -23,9 +21,7 @@ const Dekkg8Z2 = document.querySelector('#Dekkg8Z2');
 const dJLELTrV = document.querySelector('#dJLELTrV');
 const YR6JWQam = document.querySelector('#YR6JWQam');
 /** @summary イベントハンドラの登録 */
-// bC5BNbE0.addEventListener('change', onChange, false);
 TZg6mWYC.addEventListener('change', onChange, false);
-// SlJmrB3l.addEventListener('click', onClick, false);
 F8tWfFbD.addEventListener('click', onClick, false);
 Dekkg8Z2.addEventListener('click', onClick, false);
 dJLELTrV.addEventListener('click', onClick, false);
@@ -38,9 +34,6 @@ document.addEventListener('drop', onDrop, false);
  */
 function onChange (event) {
   switch (this) {
-    //case bC5BNbE0:
-    //  loadImList(this.files[0]);
-    //  break;
     case TZg6mWYC:
       loadConfig(this.files[0]);
       break;
@@ -55,9 +48,6 @@ function onChange (event) {
  */
 function onClick (event) {
   switch (this) {
-    //case SlJmrB3l:
-    //  bC5BNbE0.click();
-    //  break;
     case F8tWfFbD:
       TZg6mWYC.click();
       break;
