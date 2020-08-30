@@ -58,7 +58,7 @@ function loadConfig (file) {
   readFile(file).then(result => result.replace(/\r/g, '').split('\n').forEach(value => {
     switch (true) {
       case IM_PATTERN.test(value):
-        hoList.push(value.split(/[~_]/));
+        imList.push(value.split(/[~_]/));
         break;
       case HO_PATTERN.test(value):
         hoList.push(value);
