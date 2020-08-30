@@ -8,6 +8,10 @@
 'use strict';
 /** @type {Array<Number | String>} 走査中に得られたデータの保存先 */
 const CACHE_DATA = [ ];
+/** @type {Array<String>} 試験ができない(= 設備が動いていない)期間のリスト */
+const IM_LIST = [ ];
+/** @type {Array<String>} 対応ができない(= 設備が動いている)日付のリスト */
+const HO_LIST = [ ];
 /** @type {RegExp} フォーマット確認用の正規表現 */
 const IM_PATTERN = /^\d{4}\/\d{2}\/\d{2}\s\d{2}:\d{2}~\d{4}\/\d{2}\/\d{2}\s\d{2}:\d{2}_.+$/;
 /** @type {RegExp} フォーマット確認用の正規表現 */
@@ -28,24 +32,20 @@ let base;
 let refDate;
 /** @type {Number} タスクの経過時間 */
 let total;
-/** @type {Array<String>} 試験ができない(= 設備が動いていない)期間のリスト */
-let imList = [ ];
-/** @type {Array<String>} 対応ができない(= 設備が動いている)日付のリスト */
-let hoList = [ ];
 /**
  * @function loadConfig コンフィグファイルの読み込み
  * @argument {File} file 読み込み対象のファイル
  */
 function loadConfig (file) {
-  imList.length = 0;
-  hoList.length = 0;
+  IM_LIST.length = 0;
+  HO_LIST.length = 0;
   readFile(file).then(result => result.replace(/\r/g, '').split('\n').forEach(value => {
     switch (true) {
       case IM_PATTERN.test(value):
-        imList.push(value.split(/[~_]/));
+        IM_LIST.push(value.split(/[~_]/));
         break;
       case HO_PATTERN.test(value):
-        hoList.push(value);
+        HO_LIST.push(value);
         break;
       default:
         break;
@@ -77,8 +77,6 @@ function init () {
   disableTime = -7 * loop; // 開始時点で蓄積される停止時間を相殺する
   baseDate = new Date(`${iophZzyF.value}/${GFZYmEFU.value}/${QR0Oq3bL.value} ${az1m1nnB.value}:${NMQr9RMs.value}`);
   refDate = new Date(baseDate); // オブジェクトは参照渡しになるので、baseDateを引数に作成する
-  imList = imList.slice();
-  hoList = hoList.slice();
   CACHE_DATA.length = 0;
   YR6JWQam.querySelector('tbody').innerHTML = '';
 }
@@ -146,7 +144,7 @@ function ms2hr (ms) {
  * @return {Boolean} 参照中の日時が休日か否か
  */
 function checkHoliday () {
-  return hoList.includes(format()[0]) || refDate.isWeekend();
+  return HO_LIST.includes(format()[0]) || refDate.isWeekend();
 }
 /**
  * @function checkImmobile imListに含まれる場合に計算を中断させる
@@ -167,7 +165,7 @@ function checkHoliday () {
  */
 function checkImmobile () {
   let stop, restart, reason;
-  for (const item of imList) {                                    // 1
+  for (const item of IM_LIST) {                                    // 1
     [ stop, restart, reason ] = item;                             // 2
     if (format()[0] !== stop.split(' ')[0]) continue;             // 3
     const stopDate = new Date(stop);                              // 4
