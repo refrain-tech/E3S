@@ -29,9 +29,9 @@ let refDate;
 /** @type {Number} タスクの経過時間 */
 let total;
 /** @type {Array<String>} 試験ができない(= 設備が動いていない)期間のリスト */
-let imList;
+let imList = [ ];
 /** @type {Array<String>} 対応ができない(= 設備が動いている)日付のリスト */
-let hoList;
+let hoList = [ ];
 /**
  * @function loadImList imList生成用の関数
  * @argument {File} file 読み込み対象のファイル
@@ -93,8 +93,8 @@ function init () {
   disableTime = -7 * loop; // 開始時点で蓄積される停止時間を相殺する
   baseDate = new Date(`${iophZzyF.value}/${GFZYmEFU.value}/${QR0Oq3bL.value} ${az1m1nnB.value}:${NMQr9RMs.value}`);
   refDate = new Date(baseDate); // オブジェクトは参照渡しになるので、baseDateを引数に作成する
-  imList = imList || [ ]; // データが存在している場合はそのデータを、存在していないなら空の配列を代入する
-  hoList = hoList || [ ];
+  imList = imList.slice(); // データが存在している場合はそのデータを、存在していないなら空の配列を代入する
+  hoList = hoList.slice();
   CACHE_DATA.length = 0;
   YR6JWQam.querySelector('tbody').innerHTML = '';
 }
