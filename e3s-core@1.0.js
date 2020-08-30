@@ -33,28 +33,12 @@ let imList = [ ];
 /** @type {Array<String>} 対応ができない(= 設備が動いている)日付のリスト */
 let hoList = [ ];
 /**
- * @function loadImList imList生成用の関数
- * @argument {File} file 読み込み対象のファイル
- */
-function loadImList (file) {
-  readFile(file)
-      .then(result => imList = result.replace(/\r/g, '').split('\n').filter(value => IM_PATTERN.test(value)).map(value => value.split(/[~_]/)))
-      .catch(console.error);
-}
-/**
- * @function loadHoList hoList生成用の関数
- * @argument {File} file 読み込み対象のファイル
- */
-function loadHoList (file) {
-  readFile(file)
-      .then(result => hoList = result.replace(/\r/g, '').split('\n').filter(value => HO_PATTERN.test(value)))
-      .catch(console.error);
-}
-/**
  * @function loadConfig コンフィグファイルの読み込み
  * @argument {File} file 読み込み対象のファイル
  */
 function loadConfig (file) {
+  imList.length = 0;
+  hoList.length = 0;
   readFile(file).then(result => result.replace(/\r/g, '').split('\n').forEach(value => {
     switch (true) {
       case IM_PATTERN.test(value):
@@ -93,7 +77,7 @@ function init () {
   disableTime = -7 * loop; // 開始時点で蓄積される停止時間を相殺する
   baseDate = new Date(`${iophZzyF.value}/${GFZYmEFU.value}/${QR0Oq3bL.value} ${az1m1nnB.value}:${NMQr9RMs.value}`);
   refDate = new Date(baseDate); // オブジェクトは参照渡しになるので、baseDateを引数に作成する
-  imList = imList.slice(); // データが存在している場合はそのデータを、存在していないなら空の配列を代入する
+  imList = imList.slice();
   hoList = hoList.slice();
   CACHE_DATA.length = 0;
   YR6JWQam.querySelector('tbody').innerHTML = '';
