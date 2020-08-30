@@ -1,5 +1,5 @@
 /**
- * @overview e3s-handler@1.0.js E3Sの制御プログラム
+ * @overview e3s-handler@1.0.js E3Sのイベント系統の制御プログラム
  * @author Refrain <refrain.tech@gmail.com>
  * @since 2020/8/27
  * @version 1.0
