@@ -54,6 +54,7 @@ function onClick (event) {
       cXXeUh7g.click();
       break;
     case F8tWfFbD:
+      /** @summary Dateオブジェクトを作成し、各値をinput要素に設定する */
       const date = new Date();
       iophZzyF.value = date.getFullYear();
       GFZYmEFU.value = date.getMonth() + 1;
@@ -66,6 +67,7 @@ function onClick (event) {
       while (main());
       break;
     case dJLELTrV:
+      /** @summary イベントハンドラを登録し、copyコマンドを実行する */
       document.addEventListener('copy', onCopy, false);
       document.execCommand('copy');
       break;
@@ -78,9 +80,11 @@ function onClick (event) {
  * @argument {Event} event copyイベント
  */
 function onCopy (event) {
+  /** @summary table要素の値をテキスト形式に変換する */
   const text = [ ].map.call(YR6JWQam.rows, row => [ ].map.call(row.cells, cell => cell.textContent).join('\t')).join('\n');
   event.clipboardData.setData('text/plain', text);
   event.preventDefault();
+  /** @summary イベントハンドラを削除する */
   document.removeEventListener('copy', onCopy, false);
 }
 /**
