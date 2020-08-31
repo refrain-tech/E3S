@@ -213,6 +213,7 @@ function pad0 (value, length) {
 function arr2table () {
   const tr = document.createElement('tr');
   let td;
+  /** @summary データでtd要素を作成し、tr要素に格納する */
   for (const data of CACHE_DATA) {
     td = document.createElement('td');
     td.textContent = data;
