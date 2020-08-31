@@ -7,7 +7,6 @@
  */
 'use strict';
 /** @type {HTMLElement} GUI部品を取得する */
-const TZg6mWYC = document.querySelector('#TZg6mWYC');
 const JdVP0JG2 = document.querySelector('#JdVP0JG2');
 const H0jP0Xr4 = document.querySelector('#H0jP0Xr4');
 const UJNWVR0g = document.querySelector('#UJNWVR0g');
@@ -22,27 +21,11 @@ const Dekkg8Z2 = document.querySelector('#Dekkg8Z2');
 const dJLELTrV = document.querySelector('#dJLELTrV');
 const YR6JWQam = document.querySelector('#YR6JWQam');
 /** @summary イベントハンドラの登録 */
-TZg6mWYC.addEventListener('change', onChange, false);
-JdVP0JG2.addEventListener('click', onClick, false);
 F8tWfFbD.addEventListener('click', onClick, false);
 Dekkg8Z2.addEventListener('click', onClick, false);
 dJLELTrV.addEventListener('click', onClick, false);
 JdVP0JG2.addEventListener('dragover', onDragover, false);
 JdVP0JG2.addEventListener('drop', onDrop, false);
-/**
- * @function onChange changeイベント用の関数
- * @argument {Event} event changeイベント
- * @this {HTMLElement} イベントの発生したHTML要素
- */
-function onChange (event) {
-  switch (this) {
-    case TZg6mWYC:
-      loadConfig(this.files[0]);
-      break;
-    default:
-      break;
-  }
-}
 /**
  * @function onClick clickイベント用の関数
  * @argument {Event} event clickイベント
@@ -50,9 +33,6 @@ function onChange (event) {
  */
 function onClick (event) {
   switch (this) {
-    case JdVP0JG2:
-      TZg6mWYC.click();
-      break;
     case F8tWfFbD:
       const date = new Date();
       iophZzyF.value = date.getFullYear();
