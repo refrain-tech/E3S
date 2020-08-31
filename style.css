@@ -24,11 +24,14 @@ body {
   height: 12rem;
   width: 29rem;
 }
-#XHEEOREH div {
+#XHEEOREH span {
+  align-items: center;
   border-bottom: var(--border-light);
   border-left: var(--border-dark);
   border-right: var(--border-light);
   border-top: var(--border-dark);
+  display: flex;
+  justify-content: center;
   padding: 0.45rem;
 }
 #XHEEOREH button, #XHEEOREH input {
