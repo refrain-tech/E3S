@@ -39,18 +39,24 @@ let total;
 function loadConfig (file) {
   IM_LIST.length = 0;
   HO_LIST.length = 0;
-  readFile(file).then(result => result.replace(/\r/g, '').split('\n').forEach(value => {
-    switch (true) {
-      case IM_PATTERN.test(value):
-        IM_LIST.push(value.split(/[~_]/));
-        break;
-      case HO_PATTERN.test(value):
-        HO_LIST.push(value);
-        break;
-      default:
-        break;
-    }
-  })).catch(console.error);
+  readFile(file).then(result => {
+    result.replace(/\r/g, '').split('\n').forEach(value => {
+      switch (true) {
+        case IM_PATTERN.test(value):
+          IM_LIST.push(value.split(/[~_]/));
+          break;
+        case HO_PATTERN.test(value):
+          HO_LIST.push(value);
+          break;
+        default:
+          break;
+      }
+    });
+    window.alert('読み込みが完了しました。');
+  }).catch(error => {
+    window.alert('読み込みに失敗しました。');
+    console.error(error);
+  });
 }
 /**
  * @function readFile ファイルを読み込む
