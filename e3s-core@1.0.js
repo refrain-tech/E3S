@@ -160,31 +160,29 @@ function checkHoliday () {
  *              3. refDateの日付と停止日が一致しなければ、ループを再開する
  *              4. 停止日をDateオブジェクトにする
  *              5. stopDateのデータを保存する
- *              6. 経過時間を更新する
- *              7. refDateを再開日にする
- *              8. refDate - stopDateで停止させていた時間を取得する
+ *              6. refDateを再開日にする
+ *              7. refDate - stopDateで停止させていた時間を取得する
+ *              8. 経過時間を更新する
  *              9. 経過時間と停止理由を保存する
  *              10. データをテーブルに出力する
- *              11. 経過時間がループ数 x スパンを超えている場合、ループ数を+1する
- *              12. trueを返し関数を終了し、親ループを終了する
- *              13. falseを返し関数を終了し、親ループを継続する
+ *              11. trueを返し関数を終了し、親ループを終了する
+ *              12. falseを返し関数を終了し、親ループを継続する
  */
 function checkImmobile () {
   let stop, restart, reason;
-  for (const item of IM_LIST) {                                    // 1
+  for (const item of IM_LIST) {                                   // 1
     [ stop, restart, reason ] = item;                             // 2
     if (format()[0] !== stop.split(' ')[0]) continue;             // 3
     const stopDate = new Date(stop);                              // 4
     toCache(stopDate);                                            // 5
-    total = getTotal();                                           // 6
-    refDate = new Date(restart);                                  // 7
-    disableTime += ms2hr(refDate.getTime() - stopDate.getTime()); // 8
+    refDate = new Date(restart);                                  // 6
+    disableTime += ms2hr(refDate.getTime() - stopDate.getTime()); // 7
+    total = getTotal();                                           // 8
     CACHE_DATA.push(total, reason);                               // 9
     arr2table();                                                  // 10
-    if (total >= (loop + 1) * span) loop ++;                      // 11
-    return true;                                                  // 12
+    return true;                                                  // 11
   }
-  return false;                                                   // 13
+  return false;                                                   // 12
 }
 /**
  * @function format 参照中のDateオブジェクトを任意の形式に変換する
