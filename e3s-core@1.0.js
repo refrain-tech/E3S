@@ -179,6 +179,7 @@ function checkImmobile () {
     arr2table();                                              // 8
     const temp = new Date(restart);                           // 9
     disableTime += ms2hr(temp.getTime() - refDate.getTime()); // 10
+    refDate = temp;
     return true;                                              // 11
   }
   return false;                                               // 12
