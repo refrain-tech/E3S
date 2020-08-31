@@ -49,7 +49,7 @@ function onChange (event) {
 function onClick (event) {
   switch (this) {
     case F8tWfFbD:
-      const date = Date.now();
+      const date = new Date();
       iophZzyF.value = date.getFullYear();
       GFZYmEFU.value = date.getMonth() + 1;
       QR0Oq3bL.value = date.getDate();
