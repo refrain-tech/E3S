@@ -11,12 +11,12 @@ const TZg6mWYC = document.querySelector('#TZg6mWYC');
 const H0jP0Xr4 = document.querySelector('#H0jP0Xr4');
 const UJNWVR0g = document.querySelector('#UJNWVR0g');
 const ZHgPpUJS = document.querySelector('#ZHgPpUJS');
-const F8tWfFbD = document.querySelector('#F8tWfFbD');
 const iophZzyF = document.querySelector('#iophZzyF');
 const GFZYmEFU = document.querySelector('#GFZYmEFU');
 const QR0Oq3bL = document.querySelector('#QR0Oq3bL');
 const az1m1nnB = document.querySelector('#az1m1nnB');
 const NMQr9RMs = document.querySelector('#NMQr9RMs');
+const F8tWfFbD = document.querySelector('#F8tWfFbD');
 const Dekkg8Z2 = document.querySelector('#Dekkg8Z2');
 const dJLELTrV = document.querySelector('#dJLELTrV');
 const YR6JWQam = document.querySelector('#YR6JWQam');
@@ -49,7 +49,6 @@ function onChange (event) {
 function onClick (event) {
   switch (this) {
     case F8tWfFbD:
-      TZg6mWYC.click();
       break;
     case Dekkg8Z2:
       init();
