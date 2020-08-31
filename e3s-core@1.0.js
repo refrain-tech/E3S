@@ -114,11 +114,10 @@ function main () {
   return total < limit;                                                // 10
 }
 /**
- * @function toCache Dateオブジェクトの各値を保存する
- * @argument {Date} [date = refDate] 保存するDateオブジェクト
+ * @function toCache refDateの各値を保存する
  */
-function toCache (date = refDate) {
-  CACHE_DATA.push(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes());
+function toCache () {
+  CACHE_DATA.push(refDate.getFullYear(), refDate.getMonth() + 1, refDate.getDate(), refDate.getHours(), refDate.getMinutes());
 }
 /**
  * @function setDate refDateを任意の時間に設定する(指定時間が参照時間より前なら、翌日に補正する)
@@ -160,29 +159,29 @@ function checkHoliday () {
  *              3. refDateの日付と停止日が一致しなければ、ループを再開する
  *              4. 停止日をDateオブジェクトにする
  *              5. stopDateのデータを保存する
- *              6. refDateを再開日にする
- *              7. refDate - stopDateで停止させていた時間を取得する
- *              8. 経過時間を更新する
- *              9. 経過時間と停止理由を保存する
- *              10. データをテーブルに出力する
+ *              6. 経過時間を更新する
+ *              7. 経過時間と停止理由を保存する
+ *              8. データをテーブルに出力する
+ *              9. refDateを再開日にする
+ *              10. refDate - stopDateで停止させていた時間を取得する
  *              11. trueを返し関数を終了し、親ループを終了する
  *              12. falseを返し関数を終了し、親ループを継続する
  */
 function checkImmobile () {
   let stop, restart, reason;
-  for (const item of IM_LIST) {                                   // 1
-    [ stop, restart, reason ] = item;                             // 2
-    if (format()[0] !== stop.split(' ')[0]) continue;             // 3
-    const stopDate = new Date(stop);                              // 4
-    toCache(stopDate);                                            // 5
-    refDate = new Date(restart);                                  // 6
-    disableTime += ms2hr(refDate.getTime() - stopDate.getTime()); // 7
-    total = getTotal();                                           // 8
-    CACHE_DATA.push(total, reason);                               // 9
-    arr2table();                                                  // 10
-    return true;                                                  // 11
+  for (const item of IM_LIST) {                               // 1
+    [ stop, restart, reason ] = item;                         // 2
+    if (format()[0] !== stop.split(' ')[0]) continue;         // 3
+    refDate = new Date(stop);                                 // 4
+    toCache();                                                // 5
+    total = getTotal();                                       // 6
+    CACHE_DATA.push(total, reason);                           // 7
+    arr2table();                                              // 8
+    const temp = new Date(restart);                           // 9
+    disableTime += ms2hr(temp.getTime() - refDate.getTime()); // 10
+    return true;                                              // 11
   }
-  return false;                                                   // 12
+  return false;                                               // 12
 }
 /**
  * @function format 参照中のDateオブジェクトを任意の形式に変換する
