@@ -22,7 +22,7 @@ const Dekkg8Z2 = document.querySelector('#Dekkg8Z2');
 const dJLELTrV = document.querySelector('#dJLELTrV');
 const YR6JWQam = document.querySelector('#YR6JWQam');
 /** @summary イベントハンドラの登録 */
-cXXeUh7g.addEventListener('change' onChange, false);
+cXXeUh7g.addEventListener('change', onChange, false);
 JdVP0JG2.addEventListener('click', onClick, false);
 F8tWfFbD.addEventListener('click', onClick, false);
 Dekkg8Z2.addEventListener('click', onClick, false);
