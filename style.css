@@ -11,12 +11,21 @@ html {
 body {
   margin: 0;
 }
-#XHEEOREH {
-  background-color: lightgray;
+/** Set Borders */
+#XHEEOREH, #XHEEOREH button {
   border-bottom: var(--border-dark);
   border-left: var(--border-light);
   border-right: var(--border-dark);
   border-top: var(--border-light);
+}
+#XHEEOREH span, #XHEEOREH input, #XHEEOREH button:active {
+  border-bottom: var(--border-light);
+  border-left: var(--border-dark);
+  border-right: var(--border-light);
+  border-top: var(--border-dark);
+}
+#XHEEOREH {
+  background-color: lightgray;
   box-sizing: border-box;
   display: grid;
   grid-template-columns: 0.95rem 8rem 5rem 1rem 2rem 4rem 1rem 6rem 0.95rem;
@@ -26,38 +35,19 @@ body {
 }
 #XHEEOREH span {
   align-items: center;
-  border-bottom: var(--border-light);
-  border-left: var(--border-dark);
-  border-right: var(--border-light);
-  border-top: var(--border-dark);
   display: flex;
   justify-content: center;
-  padding: 0.45rem;
 }
-#XHEEOREH button, #XHEEOREH input {
+#XHEEOREH input, #XHEEOREH button {
   font: inherit;
   outline: 0;
-  padding: 0.45rem;
+  padding: 0;
 }
 #XHEEOREH input {
-  border-bottom: var(--border-light);
-  border-left: var(--border-dark);
-  border-right: var(--border-light);
-  border-top: var(--border-dark);
   text-align: right;
 }
 #XHEEOREH button {
-  border-bottom: var(--border-dark);
-  border-left: var(--border-light);
-  border-right: var(--border-dark);
-  border-top: var(--border-light);
   text-align: center;
-}
-#XHEEOREH button:active {
-  border-bottom: var(--border-light);
-  border-left: var(--border-dark);
-  border-right: var(--border-light);
-  border-top: var(--border-dark);
 }
 #YR6JWQam {
   border-collapse: collapse;
