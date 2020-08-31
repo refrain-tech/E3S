@@ -1,4 +1,12 @@
+/**
+ * @overview style.css E3Sのスタイルシート
+ * @author Refrain <refrain.tech@gmail.com>
+ * @since 2020/9/1
+ * @version 1.0
+ * @copyright (c) Copyright 2020 Refrain All Rights Reserved.
+ */
 @charset 'utf-8';
+@import url('https://refrain-tech.github.io/res/color.css');
 :root {
   --border-dark: solid 0.05rem var(--gray);
   --border-light: solid 0.05rem white;
