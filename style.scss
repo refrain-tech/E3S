@@ -1,0 +1,88 @@
+/**
+ * @overview style.css E3Sのスタイルシート
+ * @author Refrain <refrain.tech@gmail.com>
+ * @since 2020/9/1
+ * @update 2020/10/15 Rewrite to SCSS from CSS
+ * @version 1.0
+ * @copyright (c) Copyright 2020 Refrain All Rights Reserved.
+ */
+@charset 'utf-8';
+$red: rgb(191, 63, 63);
+$green: rgb(63, 191, 63);
+$blue: rgb(63, 63, 191);
+$magenta: rgb(191, 63, 191);
+$yellow: rgb(191, 191, 63);
+$cyan: rgb(63, 191, 191);
+$white: rgb(239, 239, 239);
+$lightgray: rgb(191, 191, 191);
+$gray: rgb(127, 127, 127);
+$darkgray: rgb(63, 63, 63);
+$black: rgb(15, 15, 15);
+$border-dark: solid 0.05rem $gray;
+$border-light: solid 0.05rem $white;
+html {
+  background: $white;
+  color: $darkgray;
+  font: 20px monospace;
+  user-select: none;
+}
+body {
+  margin: 0;
+}
+#XHEEOREH {
+  background-color: $lightgray;
+  border-bottom: $border-dark;
+  border-left: $border-light;
+  border-right: $border-dark;
+  border-top: $border-light;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 0.95rem 8rem 5rem 1rem 2rem 4rem 1rem 6rem 0.95rem;
+  grid-template-rows: 0.95rem 2rem 2rem 2rem 2rem 2rem 2rem 0.95rem;
+  height: 12rem;
+  width: 29rem;
+  button:active, input, span {
+    border-bottom: $border-light;
+    border-left: $border-dark;
+    border-right: $border-light;
+    border-top: $border-dark;
+  }
+  button, input {
+    font: inherit;
+    outline: 0;
+    padding: 0;
+  }
+  button {
+    border-bottom: $border-dark;
+    border-left: $border-light;
+    border-right: $border-dark;
+    border-top: $border-light;
+    text-align: center;
+  }
+  input {
+    text-align: right;
+  }
+  span {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+}
+#YR6JWQam {
+  border-collapse: collapse;
+  width: 29rem;
+  thead {
+    border-bottom: double 0.15rem $black;
+    text-align: center;
+  }
+  td, th {
+    border: solid 0.05rem $black;
+    min-width: 2rem;
+    &:nth-child(5n + 6) {
+      border-left: solid 0.1rem $black;
+    }
+  }
+  td {
+    text-align: right;
+  }
+}
