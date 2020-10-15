@@ -33,7 +33,7 @@ body {
   margin: 0;
 }
 #XHEEOREH {
-  background-color: $lightgray;
+  background: $lightgray;
   border-bottom: $border-dark;
   border-left: $border-light;
   border-right: $border-dark;
@@ -56,6 +56,7 @@ body {
     padding: 0;
   }
   button {
+    background: $lightgray;
     border-bottom: $border-dark;
     border-left: $border-light;
     border-right: $border-dark;
