@@ -6,8 +6,18 @@
  * @copyright (c) Copyright 2020 Refrain All Rights Reserved.
  */
 @charset 'utf-8';
-@import url('https://refrain-tech.github.io/res/color.css');
 :root {
+  --red: rgb(191, 63, 63);
+  --green: rgb(63, 191, 63);
+  --blue: rgb(63, 63, 191);
+  --magenta: rgb(191, 63, 191);
+  --yellow: rgb(191, 191, 63);
+  --cyan: rgb(63, 191, 191);
+  --white: rgb(239, 239, 239);
+  --lightgray: rgb(191, 191, 191);
+  --gray: rgb(127, 127, 127);
+  --darkgray: rgb(63, 63, 63);
+  --black: rgb(15, 15, 15);
   --border-dark: solid 0.05rem var(--gray);
   --border-light: solid 0.05rem white;
 }
