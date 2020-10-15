@@ -10,18 +10,14 @@
  * @copyright (c) Copyright 2020 Refrain All Rights Reserved.
  */
 @charset 'utf-8';
-$red: rgb(191, 63, 63);
-$green: rgb(63, 191, 63);
-$blue: rgb(63, 63, 191);
-$magenta: rgb(191, 63, 191);
-$yellow: rgb(191, 191, 63);
-$cyan: rgb(63, 191, 191);
 $white: rgb(239, 239, 239);
+$darkwhite: rgb(223, 223, 223);
 $lightgray: rgb(191, 191, 191);
 $gray: rgb(127, 127, 127);
 $darkgray: rgb(63, 63, 63);
+$lightblack: rgb(31, 31, 31);
 $black: rgb(15, 15, 15);
-$border-dark: solid 0.05rem $gray;
+$border-dark: solid 0.05rem $lightgray;
 $border-light: solid 0.05rem $white;
 html {
   background: $white;
@@ -33,7 +29,7 @@ body {
   margin: 0;
 }
 #XHEEOREH {
-  background: $lightgray;
+  background: $darkwhite;
   border-bottom: $border-dark;
   border-left: $border-light;
   border-right: $border-dark;
@@ -56,7 +52,7 @@ body {
     padding: 0;
   }
   button {
-    background: $lightgray;
+    background: $darkwhite;
     border-bottom: $border-dark;
     border-left: $border-light;
     border-right: $border-dark;
