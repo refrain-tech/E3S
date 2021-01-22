@@ -34,10 +34,10 @@ body {
   border-top: $border-light;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: 0.95rem 8rem 5rem 1rem 2rem 4rem 1rem 6rem 0.95rem;
-  grid-template-rows: 0.95rem 2rem 2rem 2rem 2rem 2rem 2rem 0.95rem;
-  height: 12rem;
-  width: 29rem;
+  grid-template-columns: 1.95rem 8rem 5rem 2rem 2rem 4rem 2rem 7rem 1.95rem;
+  grid-template-rows: 1.95rem 2rem 2rem 2rem 2rem 2rem 1.95rem;
+  height: 14rem;
+  width: 34rem;
   button:active, input, span {
     border-bottom: $border-light;
     border-left: $border-dark;
@@ -68,7 +68,7 @@ body {
 }
 #YR6JWQam {
   border-collapse: collapse;
-  width: 29rem;
+  width: 34rem;
   thead {
     border-bottom: double 0.15rem $black;
     text-align: center;
